@@ -25,15 +25,17 @@ var requestHandler = function(request, response) {
     https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types
    */
 
-   if(parsedUrl == '/listings'){
+   if(parsedUrl == '/listings/'){
     //Sends listingData as a response 
-    response.send(listingData);
-    response.end();
+    //console.log(listingData);
+    //response.writeHead(200,{'Content-Type':'application/JSON'});
+    response.write(listingData);
+    response.end('I am in /listings');
    }
    else{
-    //Sends a 404 error if parsedURL is not 
-    //response.send(404);
-    response.end('Hello');
+    //Sends a 404 error in the header of the response if parsedURL is not /listings
+    response.writeHead(404,{'Content-Type':'text/plain'});
+    response.end('Bad gateway error');
    }
 };
 
