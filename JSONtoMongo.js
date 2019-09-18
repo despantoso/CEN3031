@@ -13,7 +13,7 @@ var fs = require('fs'),
 //see https://mongoosejs.com/docs/connections.html
 //See https://docs.atlas.mongodb.com/driver-connection/
 
-mongoose.connect('mongodb+srv://despantoso23:Soccerboy03@cluster0-wdbyr.mongodb.net/test?retryWrites=true&w=majority', {useNewUrlParser: true})
+mongoose.connect(config.db.uri, {useNewUrlParser: true})
 
 /* 
   Instantiate a mongoose model for each listing object in the JSON file, 
@@ -31,6 +31,7 @@ fs.readFile('listings.json', 'utf8', function(err, data) {
       throw err;
     }
 
+    //Parses the data in the JSON and forEach element, it creates it in the Listing collection
     JSON.parse(data).entries.forEach(element => {
       Listing.create(element)
     });
