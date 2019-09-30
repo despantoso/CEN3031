@@ -19,9 +19,9 @@ var should = require('should'),
 var listing, id, latitude, longitude;
 
 listing =  {
-  code: "LBWEST", 
-  name: "Library West", 
-  address: "1545 W University Ave, Gainesville, FL 32603, United States"
+  code: "TEST", 
+  name: "Testing", 
+  address: "0000 University Ave, Gainesville, FL 32603, United States"
 }
 
 describe('Listing Schema Unit Tests', function() {
@@ -39,6 +39,16 @@ describe('Listing Schema Unit Tests', function() {
       prematurely, we can increase the timeout setting with the method this.timeout()
      */
     this.timeout(10000);
+
+
+    //Error should be thrown if name and code are not provided
+    it('throw error since name and coded not provided', function(done){
+      new Listing({
+      }).save(function(err, listing){
+        should.exist(err);
+        done();
+      });
+    });
 
     it('saves properly when code and name provided', function(done){
       new Listing({
