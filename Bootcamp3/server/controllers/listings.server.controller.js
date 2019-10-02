@@ -28,13 +28,14 @@ exports.create = function(req, res) {
   var listing = new Listing(req.body);
 
   /* save the coordinates (located in req.results if there is an address property) */
+  
   if(req.results) {
     listing.coordinates = {
       latitude: req.results.lat, 
       longitude: req.results.lng
     };
   }
- 
+
   /* Then save the listing */
   listing.save(function(err) {
     if(err) {
@@ -59,23 +60,63 @@ exports.update = function(req, res) {
 
   /* Replace the listings's properties with the new properties found in req.body */
  
+  listing.code = req.body.code
+  listing.name = req.body.name
+  listing.address = req.body.address
+
   /*save the coordinates (located in req.results if there is an address property) */
  
+  if(req.results) {
+    listing.coordinates = {
+      latitude:  req.results.lat,
+      longitude: req.results.lng, 
+     
+    };
+  
+  }
   /* Save the listing */
 
+  listing.save(function(err) {
+    if(err) {
+      console.log(err);
+      res.status(404).send(err);
+    } else {
+      res.json(listing);
+      console.log(listing)
+      }
+  });
 };
 
 /* Delete a listing */
 exports.delete = function(req, res) {
   var listing = req.listing;
 
-  /* Add your code to remove the listins */
-
+  //Find the listingById and if it exists then remove it, if not 
+  //send a 404 error stating it wasn't found
+  Listing.remove({
+    _id: req.params.listingByID
+  }, function(err, listing){
+    if(err){
+      res.status(404).send(err)
+    }
+      res.status(200).send({
+        message:"OK"
+    })
+  })
 };
 
 /* Retreive all the directory listings, sorted alphabetically by listing code */
 exports.list = function(req, res) {
-  /* Add your code */
+  var listing = req.listing
+
+  Listing.find().sort('code')
+  .then(listing => {
+    res.send(listing)
+  }).catch(err => {
+    res.status(500).send({
+      message: "Error occured while retrieving all listings"
+    })
+  })
 };
 
 /* 
@@ -85,6 +126,7 @@ exports.list = function(req, res) {
         bind it to the request object as the property 'listing', 
         then finally call next
  */
+
 exports.listingByID = function(req, res, next, id) {
   Listing.findById(id).exec(function(err, listing) {
     if(err) {
