@@ -40,7 +40,7 @@ exports.create = function(req, res) {
   listing.save(function(err) {
     if(err) {
       console.log(err);
-      res.status(400).send(err);
+      res.status(404).send(err);
     } else {
       res.json(listing);
       console.log(listing)
@@ -113,9 +113,7 @@ exports.list = function(req, res) {
   .then(listing => {
     res.send(listing)
   }).catch(err => {
-    res.status(500).send({
-      message: "Error occured while retrieving all listings"
-    })
+    res.status(404).send(err)
   })
 };
 
@@ -130,7 +128,7 @@ exports.list = function(req, res) {
 exports.listingByID = function(req, res, next, id) {
   Listing.findById(id).exec(function(err, listing) {
     if(err) {
-      res.status(400).send(err);
+      res.status(404).send(err);
     } else {
       req.listing = listing;
       next();
