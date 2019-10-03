@@ -24,12 +24,21 @@ module.exports = function(req, res, next) {
       }, function(error, response, body) {
         //For ideas about response and error processing see https://opencagedata.com/tutorials/geocode-in-nodejs
         
+       
         //JSON.parse to get contents, while using geometry to obtain the coordinates
         
-        var parsedObj = JSON.parse(body).results[0].geometry;
+        var parsedObj = JSON.parse(body)
         
-        //Saving the parsedObj into the results of the request
-        req.results = parsedObj;
+        //Check if there was not an error, if no error, take the coordinates and pass it into req.results
+        if(parsedObj.status.code === 200){
+         var coordinates = parsedObj.results[0].geometry
+          req.results = coordinates
+        }
+        //If there was an error, print it to the console
+        else {
+          console.log(error)
+        }
+  
 
         next();
     });
